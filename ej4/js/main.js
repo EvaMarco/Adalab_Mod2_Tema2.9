@@ -12,7 +12,7 @@ let tasks = [
     { name: 'Recoger setas en el campo', completed: true },
     { name: 'Comprar pilas', completed: true },
     { name: 'Poner una lavadora de blancos', completed: true },
-    {name: 'Aprender cómo se realizan las peticiones al servidor en JavaScript', completed: false}
+    { name: 'Aprender cómo se realizan las peticiones al servidor en JavaScript', completed: false }
 ];
 
 /* Función para pintar todas las tareas en la pantalla y añadir un input con su listener a cada uno */
@@ -36,11 +36,7 @@ function tareas() {
         }
     }
 
-    inputArray = document.querySelectorAll('.input');
-    for (let i of inputArray) {
-        const input = document.querySelector(`#${i.id}`);
-        input.addEventListener('change', check);
-    };
+    list.addEventListener('click', check);
 
     text.innerHTML = `
     En nuestra lista hay ${tasks.length} tareas, de las cuales hemos completado ${completed} y aún nos queda/n ${notCompleted} por terminar.: 
@@ -50,41 +46,45 @@ function tareas() {
 /* Función para que nos asigne la clase completed y nos tache el elemento cuando clickamos en los check */
 
 function check(event) {
-    const pepe = event.currentTarget;
-    const li = pepe.parentElement;
-    let done = 0;
-    let notDone = 0;
+    const pepe = event.target;
+    console.log(pepe);
+    if (event.target.classList.contains('input')) {
+        const li = pepe.parentElement;
+        let done = 0;
+        let notDone = 0;
 
-    li.classList.toggle('line');
-    for (let j = 0; j < tasks.length; j++) {
-        if (pepe.classList.contains(`input__${j}`)) {
-            if (tasks[j].completed) {
-                tasks[j].completed = false;
+        li.classList.toggle('line');
+        for (let j = 0; j < tasks.length; j++) {
+            if (pepe.classList.contains(`input__${j}`)) {
+                if (tasks[j].completed) {
+                    tasks[j].completed = false;
+                }
+                else {
+                    tasks[j].completed = true;
+                }
+            }
+        }
+        for (let items of tasks) {
+            if (items.completed) {
+                done += 1
             }
             else {
-                tasks[j].completed = true;
+                notDone += 1;
             }
         }
-    }
-    for (let items of tasks) {
-        if (items.completed) {
-            done += 1
-        }
-        else {
-            notDone += 1;
-        }
-    }
 
     text.innerHTML = `
     En nuestra lista hay ${tasks.length} tareas, de las cuales hemos completado ${done} y aún nos queda/n ${notDone} por terminar.
     `;
+    }
+
 }
 
 /* añadir nueva tarea mediante un prompt */
 
 function addNewtask(event) {
     const newName = prompt('¿Cuál es el tu nueva tarea?');
-    if(newName != null){
+    if (newName != null) {
         tasks[tasks.length] = { name: newName, completed: false };
         tareas();
     }
@@ -93,7 +93,7 @@ function addNewtask(event) {
 /* Función para eliminar las tareas completadas */
 
 function deleteTasks() {
-    tasks = tasks.filter(function(ok){
+    tasks = tasks.filter(function (ok) {
         return ok.completed == false;
     });
     tareas();
